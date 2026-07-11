@@ -92,6 +92,7 @@ def main():
     ax.set_title(f"Convergence ({a.runs} paired seeds)");ax.set_xlabel("Evaluation-budget progress");ax.set_ylabel("Best objective");ax.legend(fontsize=8)
     ax=fig.add_subplot(1,3,3);labels=list(selected);values=[[r["best_f"] for r in rows if r["algorithm"]==name] for name in labels]
     ax.boxplot(values,tick_labels=labels,showmeans=True);ax.tick_params(axis="x",rotation=25);ax.grid(True,axis="y",alpha=.25)
+    if all(np.min(value)>0 for value in values): ax.set_yscale("log")
     ax.set_title("Final objective distribution");ax.set_ylabel("Best objective")
     fig.suptitle(f"Equal-budget optimizer comparison: {a.function}, D={dim}, B={a.budget}",fontsize=14)
     fig.tight_layout();output=a.output/f"{a.function}_comparison.png";fig.savefig(output,dpi=180);print(output)
