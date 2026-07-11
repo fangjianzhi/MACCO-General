@@ -6,6 +6,7 @@
   elite principal directions.
 - Added classic F1--F23 and shifted/rotated benchmark runners.
 - Added packaging metadata, public API documentation, and expanded tests.
+- Added a reproducible convergence visualization and README figure.
 
 ## 0.2.0 - 2026-07-11
 

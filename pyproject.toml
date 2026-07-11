@@ -24,6 +24,9 @@ Homepage = "https://github.com/fangjianzhi/MACCO-General"
 Repository = "https://github.com/fangjianzhi/MACCO-General"
 Issues = "https://github.com/fangjianzhi/MACCO-General/issues"
 
+[project.optional-dependencies]
+plot = ["matplotlib>=3.7"]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["macco*"]

@@ -49,6 +49,22 @@ print(result.evaluations)
 Both optimizers return a `MACCOResult` containing `best_x`, `best_f`,
 `history`, `evaluations`, `iterations`, `seed`, and `restarts`.
 
+## Visual example
+
+The reproducible example below compares the base and subspace variants on a
+30-dimensional shifted and rotated Rastrigin problem. Lines show median
+best-so-far values over 10 paired seeds; shaded regions show interquartile
+ranges. It is a demonstration, not a universal performance claim.
+
+![MACCO convergence example](docs/assets/convergence_demo.png)
+
+Regenerate it locally with:
+
+```bash
+python -m pip install -e .[plot]
+python examples/visualize_convergence.py
+```
+
 ## Which optimizer should I use?
 
 Use `minimize` as the conservative default for ordinary bounded continuous
