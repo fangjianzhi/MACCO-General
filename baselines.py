@@ -37,6 +37,28 @@ def pso(objective, dim, lb, ub, *, population_size=40, max_evaluations=20000, se
     return MACCOResult(best_x,best_f,np.asarray(history),ev,it,seed,0)
 
 
+def gwo(objective, dim, lb, ub, *, population_size=40, max_evaluations=20000, seed=None):
+    """Grey Wolf Optimizer with a strict objective-evaluation budget."""
+    if population_size < 3:
+        raise ValueError("GWO requires at least three search agents")
+    lo,hi=_bounds(lb,ub,dim); span=hi-lo; rng=np.random.default_rng(seed)
+    x=lo+rng.random((population_size,dim))*span; f=_evaluate(objective,x); ev=population_size
+    order=np.argsort(f); alpha,beta,delta=x[order[:3]].copy()
+    best_x,best_f=alpha.copy(),float(f[order[0]]); history=[best_f]; it=0
+    while ev+population_size<=max_evaluations:
+        it+=1; progress=ev/max_evaluations; a=2*(1-progress)
+        leaders=(alpha,beta,delta); proposals=[]
+        for leader in leaders:
+            r1=rng.random(x.shape); r2=rng.random(x.shape)
+            aa=2*a*r1-a; c=2*r2
+            proposals.append(leader-aa*np.abs(c*leader-x))
+        x=_reflect(sum(proposals)/3,lo,hi); f=_evaluate(objective,x); ev+=population_size
+        order=np.argsort(f); alpha,beta,delta=x[order[:3]].copy()
+        if f[order[0]]<best_f: best_x,best_f=alpha.copy(),float(f[order[0]])
+        history.append(best_f)
+    return MACCOResult(best_x,best_f,np.asarray(history),ev,it,seed,0)
+
+
 def cbo(objective, dim, lb, ub, *, population_size=40, max_evaluations=20000, seed=None):
     """Lightweight discrete consensus-based optimization reference."""
     lo,hi=_bounds(lb,ub,dim); span=hi-lo; rng=np.random.default_rng(seed)

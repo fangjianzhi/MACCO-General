@@ -25,3 +25,4 @@ hybrid_standard_30d/
 low_rank_ablation_30d/
 low_rank_standard_30d/
 experiment_results/
+comparison_*/

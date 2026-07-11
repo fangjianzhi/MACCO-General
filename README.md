@@ -65,6 +65,13 @@ python -m pip install -e .[plot]
 python examples/visualize_convergence.py
 ```
 
+For a GWO-style three-panel comparison (landscape, convergence, and final
+distribution) using equal evaluation budgets:
+
+```bash
+python examples/compare_optimizers.py --function F9 --runs 10 --budget 30000
+```
+
 ## Which optimizer should I use?
 
 Use `minimize` as the conservative default for ordinary bounded continuous

@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 
 from macco import minimize,minimize_delayed_hybrid,minimize_hybrid,minimize_low_rank
-from baselines import cbo, de, pso
+from baselines import cbo, de, gwo, pso
 from strong_baselines import cma_es, lshade
 from classic23_benchmarks import make_classic23_suite
 
@@ -28,7 +28,7 @@ class TestMACCO(unittest.TestCase):
         self.assertTrue(np.all(result.best_x <= [1, 2, 3]))
 
     def test_equal_budget_baselines(self):
-        for optimizer in (de, pso, cbo):
+        for optimizer in (de, pso, gwo, cbo):
             result=optimizer(sphere,5,-5,5,population_size=10,max_evaluations=300,seed=3)
             self.assertEqual(result.evaluations,300)
             self.assertTrue(np.isfinite(result.best_f))
