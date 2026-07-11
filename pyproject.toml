@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "macco-general"
 version = "0.3.0"
 description = "Lightweight consensus and low-rank subspace optimizers for bounded continuous optimization"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = ["numpy>=1.24"]
 readme = "README.md"
 license = {file = "LICENSE"}

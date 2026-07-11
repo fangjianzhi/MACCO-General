@@ -1,6 +1,6 @@
 # MACCO-General
 
-MACCO-General is a lightweight research optimizer for bounded continuous
+MACCO-General is a lightweight Python 3.10+ research optimizer for bounded continuous
 black-box problems. It provides two user-facing algorithms:
 
 - `minimize`: rank-weighted consensus search with differential scouts and
