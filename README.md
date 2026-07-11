@@ -72,6 +72,16 @@ distribution) using equal evaluation budgets:
 python examples/compare_optimizers.py --function F9 --runs 10 --budget 30000
 ```
 
+Algorithms can be selected explicitly. For example:
+
+```bash
+python examples/compare_optimizers.py --function F17 --runs 10 --budget 30000 --algorithms PSO DE CBO "MACCO base" "MACCO subspace"
+```
+
+Available choices are `PSO`, `GWO`, `DE`, `CBO`, `MACCO base`, and
+`MACCO subspace`. Use selected figures as demonstrations and retain the full
+CSV output; do not treat a favorable subset as a complete benchmark claim.
+
 ## Which optimizer should I use?
 
 Use `minimize` as the conservative default for ordinary bounded continuous

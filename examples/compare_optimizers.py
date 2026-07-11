@@ -8,13 +8,15 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from baselines import gwo, pso
+from baselines import cbo, de, gwo, pso
 from classic23_benchmarks import make_classic23_suite
 from macco import minimize, minimize_subspace
 
 ALGORITHMS = {
     "PSO": pso,
     "GWO": gwo,
+    "DE": de,
+    "CBO": cbo,
     "MACCO base": minimize,
     "MACCO subspace": minimize_subspace,
 }
@@ -43,18 +45,20 @@ def main():
     p.add_argument("--population",type=int,default=30)
     p.add_argument("--budget",type=int,default=30_000)
     p.add_argument("--seed",type=int,default=20260711)
+    p.add_argument("--algorithms",nargs="+",choices=list(ALGORITHMS),
+                   default=["PSO","GWO","MACCO base","MACCO subspace"])
     p.add_argument("--output",type=Path,default=Path("comparison_demo"))
-    a=p.parse_args()
+    a=p.parse_args(); selected={name:ALGORITHMS[name] for name in a.algorithms}
     try:
         import matplotlib.pyplot as plt
     except ImportError as exc:
         raise SystemExit("Install plotting support with: pip install -e .[plot]") from exc
 
     objective,lb,ub,dim=make_classic23_suite()[a.function]
-    a.output.mkdir(parents=True,exist_ok=True); rows=[]; histories={name:[] for name in ALGORITHMS}
+    a.output.mkdir(parents=True,exist_ok=True); rows=[]; histories={name:[] for name in selected}
     for run in range(a.runs):
         seed=a.seed+run
-        for name,opt in ALGORITHMS.items():
+        for name,opt in selected.items():
             start=time.perf_counter(); result=opt(objective,dim,lb,ub,
                 population_size=a.population,max_evaluations=a.budget,seed=seed)
             elapsed=time.perf_counter()-start; histories[name].append(resample(result.history))
@@ -65,7 +69,7 @@ def main():
     with (a.output/"raw_results.csv").open("w",newline="",encoding="utf-8-sig") as f:
         w=csv.DictWriter(f,fieldnames=rows[0]);w.writeheader();w.writerows(rows)
     summary=[]
-    for name in ALGORITHMS:
+    for name in selected:
         values=np.array([r["best_f"] for r in rows if r["algorithm"]==name])
         seconds=np.array([r["seconds"] for r in rows if r["algorithm"]==name])
         summary.append(dict(function=a.function,algorithm=name,mean=values.mean(),
@@ -86,7 +90,7 @@ def main():
     else: ax.set_yscale("symlog",linthresh=1e-8)
     ax.grid(True,which="both",alpha=.25)
     ax.set_title(f"Convergence ({a.runs} paired seeds)");ax.set_xlabel("Evaluation-budget progress");ax.set_ylabel("Best objective");ax.legend(fontsize=8)
-    ax=fig.add_subplot(1,3,3);labels=list(ALGORITHMS);values=[[r["best_f"] for r in rows if r["algorithm"]==name] for name in labels]
+    ax=fig.add_subplot(1,3,3);labels=list(selected);values=[[r["best_f"] for r in rows if r["algorithm"]==name] for name in labels]
     ax.boxplot(values,tick_labels=labels,showmeans=True);ax.tick_params(axis="x",rotation=25);ax.grid(True,axis="y",alpha=.25)
     ax.set_title("Final objective distribution");ax.set_ylabel("Best objective")
     fig.suptitle(f"Equal-budget optimizer comparison: {a.function}, D={dim}, B={a.budget}",fontsize=14)
