@@ -5,6 +5,7 @@ from macco import minimize,minimize_delayed_hybrid,minimize_hybrid,minimize_low_
 from baselines import cbo, de, gwo, pso
 from strong_baselines import cma_es, lshade
 from classic23_benchmarks import make_classic23_suite
+from run_gwo_diagnostic import make_suite as make_gwo_diagnostic_suite
 
 
 def sphere(x):
@@ -70,6 +71,16 @@ class TestMACCO(unittest.TestCase):
         self.assertAlmostEqual(suite["F1"][0](np.zeros(30)),0.)
         self.assertAlmostEqual(suite["F5"][0](np.ones(30)),0.)
         self.assertAlmostEqual(suite["F18"][0](np.array([0.,-1.])),3.)
+
+    def test_gwo_diagnostic_structural_functions(self):
+        suite=make_gwo_diagnostic_suite()
+        self.assertIn("shifted_rastrigin",suite)
+        self.assertIn("rotated_rastrigin",suite)
+        self.assertIn("rotated_rosenbrock",suite)
+        for name in ("shifted_rastrigin","rotated_rastrigin","rotated_rosenbrock"):
+            fn,lb,ub,dim=suite[name]
+            self.assertEqual(dim,30)
+            self.assertTrue(np.isfinite(fn(np.zeros(dim))))
 
 
 if __name__ == "__main__":

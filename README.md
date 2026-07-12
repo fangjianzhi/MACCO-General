@@ -82,6 +82,15 @@ Available choices are `PSO`, `GWO`, `DE`, `CBO`, `MACCO base`, and
 `MACCO subspace`. Use selected figures as demonstrations and retain the full
 CSV output; do not treat a favorable subset as a complete benchmark claim.
 
+Before using GWO-inspired mechanisms in the stable optimizer, run the dedicated
+origin/shift/rotation diagnostic:
+
+```bash
+python run_gwo_diagnostic.py --runs 20 --population 30 --budget 30000 --output gwo_diagnostic_results
+```
+
+It checkpoints after every run and resumes from `raw_results.csv`.
+
 ## Which optimizer should I use?
 
 Use `minimize` as the conservative default for ordinary bounded continuous

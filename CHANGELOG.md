@@ -8,6 +8,7 @@
 - Added packaging metadata, public API documentation, and expanded tests.
 - Added a reproducible convergence visualization and README figure.
 - Added an equal-budget PSO/GWO/MACCO visual comparison script.
+- Added a checkpointed GWO origin/shift/rotation diagnostic experiment.
 
 ## 0.2.0 - 2026-07-11
 
